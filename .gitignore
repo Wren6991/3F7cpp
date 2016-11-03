@@ -5,3 +5,7 @@
 *.cz
 *.rar
 *.stackdump
+*.cbp
+*.depend
+*.layout
+*.txt

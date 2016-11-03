@@ -21,16 +21,9 @@ void test()
 		std::cout << "p[" << std::dec << i << "] = " << a[i].p << "\n";
 	}
 
-	std::vector<symbol> syms;
-	for (int i = 0; i < a.size; ++i)
-		syms.push_back(a[i]);
-
-	std::sort(syms.begin(), syms.end());
-
 	codebook cbook;
 
-	shannon_fanno(a, cbook);
-
+	huffman(a, cbook);
 	float avg_len = 0;
 	for (int i = 0; i < a.size; ++i)
 	{
@@ -39,20 +32,15 @@ void test()
 
 	std::cout << "Average length = " << avg_len << "\n";
 
-	cbook = codebook();
-
-	huffman(a, cbook);
-	avg_len = 0;
-	for (int i = 0; i < a.size; ++i)
-	{
-		 avg_len += a[i].p * cbook[a[i].sym].second;
-	}
-
-	std::cout << "Average length = " << avg_len << "\n";
+	std::fstream ifile("hamlet.txt", std::ios::in | std::ios::binary);
+	bitstream bs(ifile);
+	std::vector<char> decoded_data;
+	pfc_decode(cbook, bs, 0, decoded_data);
 }
 
 int main(int argc, char **argv)
 {
+
 	std::fstream f("hamlet.txt", std::ios::in | std::ios::binary | std::ios::ate);
 	int size = f.tellg();
 	std::cout << "File size: " << std::dec << size << " bytes\n";
@@ -72,7 +60,8 @@ int main(int argc, char **argv)
 	float expected_len = 0;
 	for (int i = 0; i < a.size; ++i)
 	{
-		expected_len += a[i].p * cbook[a[i].sym].second;
+	    if (a[i].p > 0)
+            expected_len += a[i].p * cbook[a[i].sym].second;
 	}
 
 	std::cout << "Average length: " << expected_len << "\n";
@@ -99,6 +88,5 @@ int main(int argc, char **argv)
 	pfc_decode(cbook, bs, output_len_bits, decoded_text);
 	for (int i = 0; i < (int)decoded_text.size(); ++i)
 		ofile.write(&decoded_text[i], 1);
-
 	return 0;
 }

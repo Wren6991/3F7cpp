@@ -2,14 +2,15 @@
 #ifndef _ENDIAN_H_CAMZIP_
 #define _ENDIAN_H_CAMZIP_
 
+
 #define ENDIAN_SWAP_32(x) ((((x) >> 24) & 0xff)| (((x) >> 8) & 0xff00) | (((x) << 8) & 0xff0000) | (((x) << 24) & 0xff000000))
 
-#ifdef __LITTLE_ENDIAN
+#if defined(__LITTLE_ENDIAN) || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
 
 #define be32_to_cpu(x) ENDIAN_SWAP_32(x)
 #define le32_to_cpu(x) (x)
 
-#elif __BIG_ENDIAN
+#elif defined(__BIG_ENDIAN) || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
 
 #define be32_to_cpu(x) (x)
 #define le32_to_cpu(x) ENDIAN_SWAP_32(x)

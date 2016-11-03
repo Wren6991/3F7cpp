@@ -16,7 +16,7 @@ void alphabet::histogram(iter start, iter end)
 	}
 	for (int i = 0; i < size; ++i)
 		syms[i].p /= count;
-	
+
 }
 
 float alphabet::entropy()
